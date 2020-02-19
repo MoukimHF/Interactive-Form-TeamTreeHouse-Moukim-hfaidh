@@ -59,7 +59,8 @@ window.onload = function() {
 	zip.parentNode.insertBefore(invalidzip, zip.nextElementSibling);
 	cvv.parentNode.insertBefore(invalidcvv, cvv.nextElementSibling);
 	colorLabel.style.display = 'none';
-	colorSelect.style.display = 'none';
+    colorSelect.style.display = 'none';
+    paymentOptions[1].selected=true;
 };
 //T-shirt Section
 title.addEventListener('click', (e) => {
@@ -173,39 +174,57 @@ const nameValidator = () => {
 const emailValidator = () => {
 	if (isValidEmail(email.value) == true) {
 		email.style.border = "1px solid green";
-		return false;
+		return true;
 	} else {
 		email.style.border = "1px solid red";
-		return true;
+		return false;
 	}
 }
 const ccnumValidator = () => {
 	if (isValidCreditCardNum(ccnum.value) == true) {
 		ccnum.style.border = "1px solid green";
-		return false;
+		return true;
 	} else {
 		ccnum.style.border = "1px solid red";
-		return true;
+		return false;
 	}
 }
 const cvvValidator = () => {
 	if (isValidcvv(cvv.value) == true) {
 		cvv.style.border = "1px solid green";
-		return false;
+		return true;
 	} else {
 		cvv.style.border = "1px solid red";
-		return true;
+		return false;
 	}
 }
 const zipValidator = () => {
 	if (isValidzip(zip.value) == true) {
 		zip.style.border = "1px solid green";
-		return false;
+		return true;
 	} else {
 		zip.style.border = "1px solid red";
 		invalidzip.textContent = "Can't be blanc";
 		invalidzip.style.display = 'block';
+		return false;
+	}
+}
+
+
+//validating at least one activity
+const activitiesValidator = () => {
+	let numberofchecked = 0;
+	for (let i = 0; i < checkboxes.length; i++) {
+		if (checkboxes[i].checked) {
+			numberofchecked++;
+		}
+	}
+	if (numberofchecked > 0) {
+		invalidActivity.style.display = 'none';
 		return true;
+	} else {
+		invalidActivity.style.display = 'block';
+		return false;
 	}
 }
 //validation with regex for email and name
@@ -247,25 +266,10 @@ function createListener(validator) {
 		showOrHideTip(showTip, tooltip);
 	};
 }
-//validating at least one activity
-const activitiesValidator = () => {
-	let numberofchecked = 0;
-	for (let i = 0; i < checkboxes.length; i++) {
-		if (checkboxes[i].checked) {
-			numberofchecked++;
-		}
-	}
-	if (numberofchecked > 0) {
-		invalidActivity.style.display = 'none';
-		return true;
-	} else {
-		invalidActivity.style.display = 'block';
-		return false;
-	}
-}
+
 email.addEventListener('input', createListener(isValidEmail));
 name.addEventListener('input', createListener(isValidname));
-if (paymentOptions[0].selected) {
+if (paymentOptions[1].selected) {
 	ccnum.addEventListener('input', createListener(isValidCreditCardNum));
 	zip.addEventListener('input', createListener(isValidzip));
 	cvv.addEventListener('input', createListener(isValidcvv));
@@ -281,7 +285,7 @@ form.addEventListener('submit', (e) => {
 	if (!activitiesValidator()) {
 		e.preventDefault();
 	}
-	if (paymentOptions[0].selected) {
+	if (paymentOptions[1].selected) {
 		if (!ccnumValidator()) {
 			e.preventDefault();
 		}
